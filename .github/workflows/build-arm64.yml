@@ -1,0 +1,61 @@
+name: Build Flutter Linux ARM64
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux-arm64:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Linux desktop build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libgtk-3-dev \
+            libstdc++-13-dev
+
+      - name: Install Flutter SDK (master channel)
+        run: |
+          git clone -b master --depth 1 https://github.com/flutter/flutter.git /opt/flutter
+          echo "/opt/flutter/bin" >> $GITHUB_PATH
+
+      - name: Precache Flutter Linux artifacts
+        run: |
+          flutter precache --linux
+          flutter doctor -v
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Linux ARM64 release
+        run: flutter build linux --release
+
+      - name: Package build artifact
+        run: |
+          cd build/linux/arm64/release/bundle
+          tar -czf "$GITHUB_WORKSPACE/shuffleboard_flutter-linux-arm64.tar.gz" .
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="v$(date +'%Y%m%d')-${GITHUB_SHA::7}"
+          gh release create "$TAG_NAME" \
+            --title "Build $TAG_NAME (linux-arm64)" \
+            --notes "Automated ARM64 Linux desktop build from commit ${GITHUB_SHA::7} on $(date +'%Y-%m-%d')" \
+            --target "$GITHUB_SHA" \
+            shuffleboard_flutter-linux-arm64.tar.gz
