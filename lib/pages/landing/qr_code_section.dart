@@ -22,7 +22,10 @@ class QrCodeSection extends StatelessWidget {
               version: QrVersions.auto,
               size: 250,
             ),
-            Text('shuffleboard.snubbe.se'),
+            Text(
+              'shuffleboard.snubbe.se',
+              style: TextStyle(color: Colors.black),
+            ),
           ],
         ),
       ),
