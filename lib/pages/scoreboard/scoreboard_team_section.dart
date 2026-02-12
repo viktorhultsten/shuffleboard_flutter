@@ -4,12 +4,14 @@ class ScoreboardTeamSection extends StatelessWidget {
   final int score;
   final Function(int i) onChange;
   final Color color;
+  final bool rightSide;
 
   const ScoreboardTeamSection({
     super.key,
     required this.score,
     required this.onChange,
     required this.color,
+    required this.rightSide,
   });
 
   @override
@@ -17,27 +19,63 @@ class ScoreboardTeamSection extends StatelessWidget {
     return Container(
       color: color,
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 20,
-          children: [
-            IconButton(
-              onPressed: () => onChange(1),
-              icon: Icon(Icons.arrow_upward, size: 48, color: Colors.white),
-            ),
-            Text(
-              score.toString(),
-              style: TextStyle(
-                fontSize: 80,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        child: SafeArea(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (rightSide)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      score.toString(),
+                      style: TextStyle(
+                        fontSize: 80,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 20,
+                children: [
+                  IconButton(
+                    onPressed: () => onChange(1),
+                    icon: Icon(
+                      Icons.arrow_upward,
+                      size: 48,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  IconButton(
+                    onPressed: () => onChange(-1),
+                    icon: Icon(
+                      Icons.arrow_downward,
+                      size: 48,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            IconButton(
-              onPressed: () => onChange(-1),
-              icon: Icon(Icons.arrow_downward, size: 48, color: Colors.white),
-            ),
-          ],
+
+              if (!rightSide)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      score.toString(),
+                      style: TextStyle(
+                        fontSize: 80,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

@@ -34,6 +34,7 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
               score: redScore,
               color: const Color(0xFFD32F2F),
               onChange: (i) => _onScoreChange(i, isRed: true),
+              rightSide: false,
             ),
           ),
           Expanded(
@@ -41,6 +42,7 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
               score: blueScore,
               color: const Color(0xFF1976D2),
               onChange: (i) => _onScoreChange(i, isRed: false),
+              rightSide: true,
             ),
           ),
         ],
