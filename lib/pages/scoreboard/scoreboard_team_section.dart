@@ -3,22 +3,18 @@ import 'package:flutter/material.dart';
 class ScoreboardTeamSection extends StatelessWidget {
   final int score;
   final Function(int i) onChange;
-  final Color color;
   final bool rightSide;
 
   const ScoreboardTeamSection({
     super.key,
     required this.score,
     required this.onChange,
-    required this.color,
     required this.rightSide,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: color,
-      child: Center(
+    return Center(
         child: SafeArea(
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -77,7 +73,6 @@ class ScoreboardTeamSection extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

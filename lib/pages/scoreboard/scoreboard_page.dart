@@ -27,25 +27,39 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            child: ScoreboardTeamSection(
-              score: redScore,
-              color: const Color(0xFFD32F2F),
-              onChange: (i) => _onScoreChange(i, isRed: true),
-              rightSide: false,
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFB71C1C),
+              Color(0xFF880E4F),
+              Color(0xFF4A148C),
+              Color(0xFF283593),
+              Color(0xFF0D47A1),
+            ],
+            stops: [0.0, 0.35, 0.5, 0.65, 1.0],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
-          Expanded(
-            child: ScoreboardTeamSection(
-              score: blueScore,
-              color: const Color(0xFF1976D2),
-              onChange: (i) => _onScoreChange(i, isRed: false),
-              rightSide: true,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: ScoreboardTeamSection(
+                score: redScore,
+                onChange: (i) => _onScoreChange(i, isRed: true),
+                rightSide: false,
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: ScoreboardTeamSection(
+                score: blueScore,
+                onChange: (i) => _onScoreChange(i, isRed: false),
+                rightSide: true,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
