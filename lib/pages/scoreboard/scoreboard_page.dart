@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuffleboard_flutter/common/custom_icon_button.dart';
 import 'package:shuffleboard_flutter/pages/scoreboard/scoreboard_team_section.dart';
 
 class ScoreboardPage extends StatefulWidget {
@@ -11,6 +12,13 @@ class ScoreboardPage extends StatefulWidget {
 class _ScoreboardPageState extends State<ScoreboardPage> {
   int redScore = 0;
   int blueScore = 0;
+
+  void _resetScores() {
+    setState(() {
+      redScore = 0;
+      blueScore = 0;
+    });
+  }
 
   void _onScoreChange(int delta, {required bool isRed}) {
     final newScore = (isRed ? redScore : blueScore) + delta;
@@ -49,13 +57,29 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
                 score: redScore,
                 onChange: (i) => _onScoreChange(i, isRed: true),
                 rightSide: false,
+                teamName: 'Team red',
               ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 50,
+              children: [
+                CustomIconButton(
+                  onPressed: _resetScores,
+                  iconData: Icons.refresh,
+                ),
+                CustomIconButton(
+                  onPressed: () => Navigator.pop(context),
+                  iconData: Icons.home,
+                ),
+              ],
             ),
             Expanded(
               child: ScoreboardTeamSection(
                 score: blueScore,
                 onChange: (i) => _onScoreChange(i, isRed: false),
                 rightSide: true,
+                teamName: 'Team blue',
               ),
             ),
           ],
