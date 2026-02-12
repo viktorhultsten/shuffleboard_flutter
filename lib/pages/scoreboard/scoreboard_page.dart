@@ -30,19 +30,17 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
       body: Row(
         children: [
           Expanded(
-            child: Center(
-              child: ScoreboardTeamSection(
-                score: redScore,
-                onChange: (i) => _onScoreChange(i, isRed: true),
-              ),
+            child: ScoreboardTeamSection(
+              score: redScore,
+              color: const Color(0xFFD32F2F),
+              onChange: (i) => _onScoreChange(i, isRed: true),
             ),
           ),
           Expanded(
-            child: Center(
-              child: ScoreboardTeamSection(
-                score: blueScore,
-                onChange: (i) => _onScoreChange(i, isRed: false),
-              ),
+            child: ScoreboardTeamSection(
+              score: blueScore,
+              color: const Color(0xFF1976D2),
+              onChange: (i) => _onScoreChange(i, isRed: false),
             ),
           ),
         ],
