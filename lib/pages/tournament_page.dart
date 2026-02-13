@@ -4,10 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shuffleboard_flutter/app_config.dart';
 
-const _apiBase = 'http://192.168.0.112:3000'; // TODO: replace with real URL
-const _registerBaseUrl =
-    'http://192.168.0.112:3000/register'; // TODO: replace with real URL
+const _registerBaseUrl = '${AppConfig.baseUrl}/register';
 const _apiKey = 'dev-api-key-123';
 const _pollInterval = Duration(seconds: 1);
 const _inactivityTimeout = Duration(minutes: 5);
@@ -35,7 +34,7 @@ class _TournamentPageState extends State<TournamentPage> {
   Future<void> _initiate() async {
     try {
       final response = await http.post(
-        Uri.parse('$_apiBase/initiate'),
+        Uri.parse('${AppConfig.baseUrl}/initiate'),
         headers: {'x-api-key': _apiKey},
       );
       if (!mounted) return;
@@ -78,7 +77,7 @@ class _TournamentPageState extends State<TournamentPage> {
   Future<void> _checkStatus() async {
     try {
       final response = await http.get(
-        Uri.parse('$_apiBase/tournament/status'),
+        Uri.parse('${AppConfig.baseUrl}/tournament/status'),
         headers: {'x-api-key': _apiKey},
       );
       if (!mounted) return;
@@ -108,7 +107,7 @@ class _TournamentPageState extends State<TournamentPage> {
   Future<void> _cancelSession() async {
     try {
       await http.post(
-        Uri.parse('$_apiBase/cancel'),
+        Uri.parse('${AppConfig.baseUrl}/cancel'),
         headers: {'x-api-key': _apiKey},
       );
     } catch (_) {}
