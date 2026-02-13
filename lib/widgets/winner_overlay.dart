@@ -15,7 +15,7 @@ class WinnerOverlay extends StatefulWidget {
   final String winnerLabel;
   final Color winnerColor;
   final VoidCallback onNewGame;
-  final Future<bool>? resultFuture;
+  final Future<(bool, String?)>? resultFuture;
 
   @override
   State<WinnerOverlay> createState() => _WinnerOverlayState();
@@ -24,17 +24,20 @@ class WinnerOverlay extends StatefulWidget {
 class _WinnerOverlayState extends State<WinnerOverlay> {
   bool _resultDone = false;
   bool _resultFailed = false;
+  String? _errorMessage;
   Timer? _autoResetTimer;
 
   @override
   void initState() {
     super.initState();
     if (widget.resultFuture != null) {
-      widget.resultFuture!.then((success) {
+      widget.resultFuture!.then((result) {
+        final (success, errorMessage) = result;
         if (mounted) {
           setState(() {
             _resultDone = true;
             _resultFailed = !success;
+            _errorMessage = errorMessage;
           });
           _autoResetTimer = Timer(const Duration(minutes: 5), () {
             if (mounted) widget.onNewGame();
@@ -116,12 +119,29 @@ class _WinnerOverlayState extends State<WinnerOverlay> {
             if (widget.resultFuture != null && _resultDone && _resultFailed)
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: Text(
-                  'Kunde inte registrera resultat',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.red.withValues(alpha: 0.8),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Kunde inte registrera resultat',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.red.withValues(alpha: 0.8),
+                      ),
+                    ),
+                    if (_errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          _errorMessage!,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.red.withValues(alpha: 0.6),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             if (showButton)

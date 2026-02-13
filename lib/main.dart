@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:shuffleboard_flutter/app_config.dart';
 import 'package:shuffleboard_flutter/pages/tournament_page.dart';
 import 'package:shuffleboard_flutter/widgets/confirm_dialog.dart';
 import 'package:shuffleboard_flutter/widgets/scoreboard_button.dart';
@@ -60,21 +61,21 @@ class ScoreboardPage extends StatefulWidget {
   State<ScoreboardPage> createState() => _ScoreboardPageState();
 }
 
-const _apiBase = 'http://192.168.0.112:3000';
 const _apiKey = 'dev-api-key-123';
 
 class _ScoreboardPageState extends State<ScoreboardPage> {
   int _blueScore = 0;
   int _redScore = 0;
-  Future<bool>? _resultFuture;
+  Future<(bool, String?)>? _resultFuture;
 
   bool get _isTournament =>
       widget.blueLabel != 'Team Blåbär' || widget.redLabel != 'Team Lingon';
 
-  Future<bool> _sendResult(String winner) async {
+  Future<(bool, String?)> _sendResult(String winner) async {
     try {
+      final url = '${AppConfig.baseUrl}/tournament/result';
       final response = await http.post(
-        Uri.parse('$_apiBase/tournament/result'),
+        Uri.parse(url),
         headers: {'x-api-key': _apiKey, 'Content-Type': 'application/json'},
         body: jsonEncode({
           'blueTeam': widget.blueLabel,
@@ -84,9 +85,12 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
           'winner': winner,
         }),
       );
-      return response.statusCode == 200;
-    } catch (_) {
-      return false;
+      if (response.statusCode == 200) {
+        return (true, null);
+      }
+      return (false, '$url → ${response.statusCode}: ${response.body}');
+    } catch (e) {
+      return (false, e.toString());
     }
   }
 
