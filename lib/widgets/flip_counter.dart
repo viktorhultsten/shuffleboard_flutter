@@ -113,9 +113,10 @@ class _FlipDigitState extends State<FlipDigit>
     final hPad = widget.fontSize * 0.2;
     final vPad = widget.fontSize * 0.15;
 
+    final radius = widget.fontSize * 0.085;
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
@@ -125,7 +126,7 @@ class _FlipDigitState extends State<FlipDigit>
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(radius),
         child: IntrinsicWidth(
           child: Stack(
             children: [
@@ -140,7 +141,7 @@ class _FlipDigitState extends State<FlipDigit>
                     hPad: hPad,
                     vPad: vPad,
                   ),
-                  Container(height: 2, color: Colors.grey[900]),
+                  Container(height: widget.fontSize * 0.015, color: Colors.grey[900]),
                   _buildHalf(
                     text: '$_previousValue',
                     style: style,
@@ -189,7 +190,7 @@ class _FlipDigitState extends State<FlipDigit>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(height: 2, color: Colors.grey[900]),
+                          Container(height: widget.fontSize * 0.015, color: Colors.grey[900]),
                           _buildHalf(
                             text: '$_currentValue',
                             style: style,

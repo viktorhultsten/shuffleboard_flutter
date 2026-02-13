@@ -166,26 +166,52 @@ class _TeamPanelState extends State<TeamPanel>
     );
 
     final scoreDisplay = Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            widget.label,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: widget.color.withValues(alpha: 0.7),
-            ),
-          ),
-          const SizedBox(height: 12),
-          FlipCounter(value: widget.score, color: widget.color),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Each digit takes roughly fontSize * 1.4 width (text + padding),
+          // plus a small gap between digits. Two digits + gap ≈ fontSize * 2.9.
+          final maxByWidth = constraints.maxWidth / 2.9;
+          // Vertically: label (~30px) + spacing + counter height (~fontSize * 1.3)
+          final maxByHeight = (constraints.maxHeight - 42) / 1.3;
+          final fontSize =
+              maxByWidth.clamp(0.0, maxByHeight).clamp(24.0, 200.0);
+
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.label,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: widget.color.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  FlipCounter(
+                    value: widget.score,
+                    color: widget.color,
+                    fontSize: fontSize,
+                  ),
+                ],
+              ),
+              Positioned(
+                left: widget.reversed ? null : 0,
+                right: widget.reversed ? 0 : null,
+                child: pendingIndicator,
+              ),
+            ],
+          );
+        },
       ),
     );
 
     final children = widget.reversed
-        ? [scoreDisplay, pendingIndicator, buttons]
-        : [buttons, pendingIndicator, scoreDisplay];
+        ? [scoreDisplay, buttons]
+        : [buttons, scoreDisplay];
 
     return Expanded(child: Row(children: children));
   }
