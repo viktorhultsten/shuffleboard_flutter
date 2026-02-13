@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shuffleboard_flutter/common/custom_icon_button.dart';
-import 'package:shuffleboard_flutter/pages/scoreboard/scoreboard_team_section.dart';
+import '../../common/custom_icon_button.dart';
+import 'scoreboard_team_section.dart';
 
 class ScoreboardPage extends StatefulWidget {
   const ScoreboardPage({super.key});

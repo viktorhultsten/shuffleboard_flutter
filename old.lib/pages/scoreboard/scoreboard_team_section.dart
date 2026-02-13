@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shuffleboard_flutter/common/custom_icon_button.dart';
+import '../../common/custom_icon_button.dart';
 
 class ScoreboardTeamSection extends StatelessWidget {
   final int score;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shuffleboard_flutter/pages/landing/qr_code_section.dart';
-import 'package:shuffleboard_flutter/pages/scoreboard/scoreboard_page.dart';
+import 'qr_code_section.dart';
+import '../scoreboard/scoreboard_page.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
