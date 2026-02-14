@@ -118,73 +118,6 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
           children: [
             Column(
               children: [
-                if (_isTournament)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.withValues(alpha: 0.15),
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.amber.withValues(alpha: 0.3),
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.emoji_events,
-                          size: 16,
-                          color: Colors.amber.withValues(alpha: 0.8),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Turnering',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.amber.withValues(alpha: 0.8),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Material(
-                          color: Colors.amber.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(6),
-                            onTap: () async {
-                              final confirmed = await showConfirmDialog(
-                                context,
-                                title: 'Avbryt turnering',
-                                content:
-                                    'Vill du avbryta turneringen och återställa lagnamnen?',
-                              );
-                              if (confirmed && context.mounted) {
-                                Navigator.of(context).pushReplacement(
-                                  _fadeRoute(const ScoreboardPage()),
-                                );
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 4,
-                              ),
-                              child: Text(
-                                'Avbryt turnering',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.amber.withValues(alpha: 0.8),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 Expanded(
                   child: Row(
                     children: [
@@ -208,67 +141,122 @@ class _ScoreboardPageState extends State<ScoreboardPage> {
                     ],
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[850],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[700]!, width: 1),
+                if (_isTournament)
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.15),
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.amber.withValues(alpha: 0.3),
+                        ),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.emoji_events,
+                          size: 18,
+                          color: Colors.amber.withValues(alpha: 0.8),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Turnering!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.amber.withValues(alpha: 0.8),
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        ScoreboardButton(
+                          onPressed: () async {
+                            final confirmed = await showConfirmDialog(
+                              context,
+                              title: 'Avbryt turnering',
+                              content: 'Vill du avbryta turneringen?',
+                            );
+                            if (confirmed && context.mounted) {
+                              Navigator.of(context).pushReplacement(
+                                _fadeRoute(const ScoreboardPage()),
+                              );
+                            }
+                          },
+                          icon: Icons.close,
+                          label: 'Avbryt turnering',
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[850],
+                      border: Border(
+                        top: BorderSide(color: Colors.grey[700]!, width: 1),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ScoreboardButton(
+                          onPressed: (_blueScore > 0 || _redScore > 0)
+                              ? () async {
+                                  final confirmed = await showConfirmDialog(
+                                    context,
+                                    title: 'Starta om',
+                                    content:
+                                        'Vill du nollställa poängen?',
+                                  );
+                                  if (confirmed && context.mounted) {
+                                    setState(() {
+                                      _blueScore = 0;
+                                      _redScore = 0;
+                                    });
+                                  }
+                                }
+                              : null,
+                          icon: Icons.restart_alt,
+                          label: 'Starta om',
+                        ),
+                        const SizedBox(width: 32),
+                        ScoreboardButton(
+                          onPressed: () async {
+                            final result = await Navigator.of(context)
+                                .push<Map<String, String>>(
+                                  _fadeRoute(const TournamentPage()),
+                                );
+                            if (result != null && context.mounted) {
+                              Navigator.of(context).pushReplacement(
+                                _fadeRoute(
+                                  ScoreboardPage(
+                                    blueLabel: result['blueTeam']!,
+                                    redLabel: result['redTeam']!,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icons.groups,
+                          label: 'Kör turneringsmatch',
+                        ),
+                      ],
                     ),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ScoreboardButton(
-                        onPressed: () async {
-                          final confirmed = await showConfirmDialog(
-                            context,
-                            title: 'Starta om',
-                            content:
-                                'Vill du nollställa poängen och återställa lagnamnen?',
-                          );
-                          if (confirmed && context.mounted) {
-                            Navigator.of(context).pushReplacement(
-                              _fadeRoute(const ScoreboardPage()),
-                            );
-                          }
-                        },
-                        icon: Icons.restart_alt,
-                        label: 'Starta om',
-                      ),
-                      const SizedBox(width: 32),
-                      ScoreboardButton(
-                        onPressed: _isTournament
-                            ? null
-                            : () async {
-                                final result = await Navigator.of(context)
-                                    .push<Map<String, String>>(
-                                      _fadeRoute(const TournamentPage()),
-                                    );
-                                if (result != null && context.mounted) {
-                                  Navigator.of(context).pushReplacement(
-                                    _fadeRoute(
-                                      ScoreboardPage(
-                                        blueLabel: result['blueTeam']!,
-                                        redLabel: result['redTeam']!,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                        icon: Icons.groups,
-                        label: 'Turnering',
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
             if (winnerLabel != null && winnerColor != null)
               WinnerOverlay(
                 winnerLabel: winnerLabel,
                 winnerColor: winnerColor,
+                blueLabel: widget.blueLabel,
+                redLabel: widget.redLabel,
+                blueScore: _blueScore,
+                redScore: _redScore,
                 resultFuture: _resultFuture,
                 onNewGame: () {
                   Navigator.of(

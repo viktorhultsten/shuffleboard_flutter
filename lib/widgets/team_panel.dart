@@ -25,7 +25,7 @@ class TeamPanel extends StatefulWidget {
 
 class _TeamPanelState extends State<TeamPanel>
     with SingleTickerProviderStateMixin {
-  static const _commitDuration = Duration(seconds: 3);
+  static const _commitDuration = Duration(seconds: 1);
 
   int _pending = 0;
   int _lastNonZeroPending = 0;
@@ -165,13 +165,17 @@ class _TeamPanelState extends State<TeamPanel>
       ),
     );
 
+    // Offset buttons down to align with the flip counter center,
+    // accounting for the label (20px font) + 12px spacing above it.
+    final offsetButtons = Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: buttons,
+    );
+
     final scoreDisplay = Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Each digit takes roughly fontSize * 1.4 width (text + padding),
-          // plus a small gap between digits. Two digits + gap ≈ fontSize * 2.9.
           final maxByWidth = constraints.maxWidth / 2.9;
-          // Vertically: label (~30px) + spacing + counter height (~fontSize * 1.3)
           final maxByHeight = (constraints.maxHeight - 42) / 1.3;
           final fontSize =
               maxByWidth.clamp(0.0, maxByHeight).clamp(24.0, 200.0);
@@ -210,8 +214,8 @@ class _TeamPanelState extends State<TeamPanel>
     );
 
     final children = widget.reversed
-        ? [scoreDisplay, buttons]
-        : [buttons, scoreDisplay];
+        ? [scoreDisplay, offsetButtons]
+        : [offsetButtons, scoreDisplay];
 
     return Expanded(child: Row(children: children));
   }
